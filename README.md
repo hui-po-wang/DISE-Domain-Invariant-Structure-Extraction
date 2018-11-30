@@ -1,19 +1,39 @@
 # DISE-Domain-Invariant-Structure-Extraction
-Pytorch Implementation of the paper All about Structure: Adapting Structural Information across Domains for Boosting Semantic Segmentation
+Pytorch Implementation of the paper All about Structure: Adapting Structural Information across Domains for Boosting Semantic Segmentation.
 
+Introduction video: (youtube link here)
 ## Paper
 Ciation information here
 
-## Introduction
+## Example Results
+![prediction_results.png](examples/prediction_results.png)
+
+## Quantitative Results
+![performance.png](examples/performance.png)
 
 ## Installation
-
+```
+git clone https://github.com/a514514772/DISE-Domain-Invariant-Structure-Extraction.git
+```
 ## Datasets
 
+1. Download the [GTA5 Dataset](https://download.visinf.tu-darmstadt.de/data/from_games/) as the source domain and unzip it to  `/data`
+2. Download the [Cityscapes Dataset](https://www.cityscapes-dataset.com) as the target domain and unzip it to  `/data`
+
+The structure of `/data` may look like this:
+  ```
+  ├── data
+      ├── Cityscapes
+      │   ├── gtFine
+      │   └── leftImg8bit
+      ├── GTA5
+          ├── images
+          └── labels
+  ```
 ## Usage
-### Train GTA5 to Cityscapes
+### Example Training Script: GTA5 to Cityscapes
 ```
-python train_dise_gta2city.py --gta5_data_path path_to_gta5_dir --city_data_path path_to_cityscapes_dir
+python train_dise_gta2city.py --gta5_data_path /data/GTA5 --city_data_path /data/Cityscapes
 ```
 ### More options
 ```
