@@ -37,7 +37,8 @@ python train_dise_gta2city.py --gta5_data_path /data/GTA5 --city_data_path /data
 ```
 ### More options
 ```
-python train_dise_gta2city.py  -husage: train_dise_gta2city.py [-h] [--dump_logs DUMP_LOGS] [--log_dir LOG_DIR] [--gen_img_dir GEN_IMG_DIR]
+python train_dise_gta2city.py  -h
+usage: train_dise_gta2city.py [-h] [--dump_logs DUMP_LOGS] [--log_dir LOG_DIR] [--gen_img_dir GEN_IMG_DIR]
                               [--gta5_data_path GTA5_DATA_PATH] [--city_data_path CITY_DATA_PATH]
                               [--data_list_path_gta5 DATA_LIST_PATH_GTA5]
                               [--data_list_path_city_img DATA_LIST_PATH_CITY_IMG]
