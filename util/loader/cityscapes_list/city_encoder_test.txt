@@ -1,0 +1,3 @@
+jena/jena_000050_000019_leftImg8bit.png
+ulm/ulm_000015_000019_leftImg8bit.png
+aachen/aachen_000001_000019_leftImg8bit.png
