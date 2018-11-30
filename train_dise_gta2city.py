@@ -57,7 +57,7 @@ parser.add_argument('--data_list_path_val_lbl', type=str, default=DATA_LIST_PATH
 
 parser.add_argument('--cuda_device_id', nargs='+', type=str, default=CUDA_DIVICE_ID)
 
-args = parser.parse_argument()
+args = parser.parse_args()
 
 os.environ['CUDA_VISIBLE_DEVICES'] = args.cuda_device_id
 
