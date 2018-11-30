@@ -47,7 +47,7 @@ parser = argparse.ArgumentParser(description='Domain Invariant Structure Extract
 parser.add_argument('--dump_logs', type=bool, default=True)
 parser.add_argument('--log_dir', type=str, default=LOG_DIR, help='the path to where you save plots and logs.')
 parser.add_argument('--gen_img_dir', type=str, default=GEN_IMG_DIR, help='the path to where you save translated images and segmentation maps.')
-parser.add_argument('--gta_data_path', type=str, default=GTA5_DATA_PATH, help='the path to GTA5 dataset.')
+parser.add_argument('--gta5_data_path', type=str, default=GTA5_DATA_PATH, help='the path to GTA5 dataset.')
 parser.add_argument('--city_data_path', type=str, default=CITY_DATA_PATH, help='the path to Cityscapes dataset.')
 parser.add_argument('--data_list_path_gta5', type=str, default=DATA_LIST_PATH_GTA5)
 parser.add_argument('--data_list_path_city_img', type=str, default=DATA_LIST_PATH_CITY_IMG)
@@ -229,6 +229,8 @@ best_iou = 0
 best_iter= 0
 for i_iter in range(num_steps):
     print (i_iter)
+    sys.stdout.flush()
+
     enc_shared.train()
     adjust_learning_rate(seg_opt_list , base_lr=learning_rate_seg, i_iter=i_iter, max_iter=num_steps, power=power)
     adjust_learning_rate(dclf_opt_list, base_lr=learning_rate_d  , i_iter=i_iter, max_iter=num_steps, power=power)
@@ -524,7 +526,7 @@ for i_iter in range(num_steps):
         cty_running_metrics.reset()
         City_tmp.append(cty_score['Mean IoU : \t'])
         epoch_tmp.append(i_iter)
-        if i_iter % 50000 == 0:
+        if i_iter % 50000 == 0 and i_iter != 0:
         	save_models(model_dict, './weight_' + str(i_iter))
 
         if cty_score['Mean IoU : \t'] > best_iou:
