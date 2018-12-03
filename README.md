@@ -1,7 +1,7 @@
 # DISE-Domain-Invariant-Structure-Extraction
 Pytorch Implementation of the paper All about Structure: Adapting Structural Information across Domains for Boosting Semantic Segmentation.
 
-Introduction video: (youtube link here)
+Introduction video: [youtube](https://youtu.be/YnD_zQNbfK4)
 ## Paper
 Ciation information here
 
@@ -51,3 +51,4 @@ Domain Invariant Structure Extraction (DISE) for unsupervised domain adaptation 
 ```
 
 ## Acknowledgement
+We implement this project heavily based on [AdaptSeg](https://github.com/wasidennis/AdaptSegNet) proposed by Tsai et el..
