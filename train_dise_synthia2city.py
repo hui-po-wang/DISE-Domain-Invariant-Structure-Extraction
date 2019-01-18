@@ -20,7 +20,7 @@ from torch.autograd import Variable
 from tqdm import tqdm
 
 from util.loader.CityLoader import CityLoader
-from util.loader.GTA5Loader import GTA5Loader
+from util.loader.SYNTHIALoader import SYNTHIALoader
 from util.loader.augmentations import Compose, RandomHorizontallyFlip, RandomSized_and_Crop, RandomCrop
 from util.metrics import runningScore
 from util.loss import VGGLoss, VGGLoss_for_trans, cross_entropy2d
@@ -31,25 +31,25 @@ from util.utils import poly_lr_scheduler, adjust_learning_rate, save_models, loa
 LOG_DIR = './log'
 GEN_IMG_DIR = './generated_imgs'
 
-GTA5_DATA_PATH = '/workspace/lustre/data/GTA5'
+SYNTHIA_DATA_PATH = '/workspace/lustre/data/RAND_CITYSCAPES'
 CITY_DATA_PATH = '/workspace/lustre/data/Cityscapes'
-DATA_LIST_PATH_GTA5 = './util/loader/gta5_list/train_modified.txt'
+DATA_LIST_PATH_SYNTHIA = './util/loader/synthia_list/train.txt'
 DATA_LIST_PATH_CITY_IMG = './util/loader/cityscapes_list/train.txt'
 DATA_LIST_PATH_CITY_LBL = './util/loader/cityscapes_list/train_label.txt'
 DATA_LIST_PATH_VAL_IMG  = './util/loader/cityscapes_list/val.txt'
 DATA_LIST_PATH_VAL_LBL  = './util/loader/cityscapes_list/val_label.txt'
 
 # Hyper-parameters
-CUDA_DIVICE_ID = '0'
+CUDA_DIVICE_ID = '0, 1'
 
 parser = argparse.ArgumentParser(description='Domain Invariant Structure Extraction (DISE) \
 	for unsupervised domain adaptation for semantic segmentation')
 parser.add_argument('--dump_logs', type=bool, default=True)
 parser.add_argument('--log_dir', type=str, default=LOG_DIR, help='the path to where you save plots and logs.')
 parser.add_argument('--gen_img_dir', type=str, default=GEN_IMG_DIR, help='the path to where you save translated images and segmentation maps.')
-parser.add_argument('--gta5_data_path', type=str, default=GTA5_DATA_PATH, help='the path to GTA5 dataset.')
+parser.add_argument('--synthia_data_path', type=str, default=SYNTHIA_DATA_PATH, help='the path to SYNTHIA dataset.')
 parser.add_argument('--city_data_path', type=str, default=CITY_DATA_PATH, help='the path to Cityscapes dataset.')
-parser.add_argument('--data_list_path_gta5', type=str, default=DATA_LIST_PATH_GTA5)
+parser.add_argument('--data_list_path_synthia', type=str, default=DATA_LIST_PATH_SYNTHIA)
 parser.add_argument('--data_list_path_city_img', type=str, default=DATA_LIST_PATH_CITY_IMG)
 parser.add_argument('--data_list_path_city_lbl', type=str, default=DATA_LIST_PATH_CITY_LBL)
 parser.add_argument('--data_list_path_val_img', type=str, default=DATA_LIST_PATH_VAL_IMG)
@@ -99,16 +99,16 @@ private_code_size = 8
 shared_code_channels = 2048
 
 # Setup Augmentations
-gta5_data_aug = Compose([RandomHorizontallyFlip(),
-                         RandomSized_and_Crop([256, 512])
+synthia_data_aug = Compose([RandomHorizontallyFlip(),
+                         RandomSized_and_Crop([512, 1024])
                          ])
 
 city_data_aug = Compose([RandomHorizontallyFlip(),
-                         RandomCrop([256, 512])
+                         RandomCrop([512, 1024])
                         ])
 # ==== DataLoader ====
-gta5_set   = GTA5Loader(args.gta5_data_path, args.data_list_path_gta5, max_iters=num_steps* batch_size, crop_size=source_input_size, transform=gta5_data_aug, mean=IMG_MEAN)
-source_loader= torch_data.DataLoader(gta5_set, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
+synthia_set   = SYNTHIALoader(args.synthia_data_path, args.data_list_path_synthia, max_iters=num_steps* batch_size, crop_size=source_input_size, transform=synthia_data_aug, mean=IMG_MEAN)
+source_loader= torch_data.DataLoader(synthia_set, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
 
 city_set   = CityLoader(args.city_data_path, args.data_list_path_city_img, args.data_list_path_city_lbl, max_iters=num_steps* batch_size, crop_size=target_input_size, transform=city_data_aug, mean=IMG_MEAN, set='train')
 target_loader= torch_data.DataLoader(city_set, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
@@ -170,8 +170,6 @@ rec_opt_list.append(dec_s_opt)
 rec_opt_list.append(dec_t_opt)
 dis_opt_list.append(dis_s2t_opt)
 dis_opt_list.append(dis_t2s_opt)
-
-# load_models(model_dict, './weight_90000/')
 
 cudnn.enabled   = True
 cudnn.benchmark = True
@@ -373,17 +371,17 @@ for i_iter in range(num_steps):
     pred_s = F.softmax(s_pred2).data.max(1)[1].cpu().numpy()
     pred_t = F.softmax(t_pred2).data.max(1)[1].cpu().numpy()
 
-    map_s  = gta5_set.decode_segmap(pred_s)
+    map_s  = synthia_set.decode_segmap(pred_s)
     map_t  = city_set.decode_segmap(pred_t)
 
     gt_s = slabelv.data.cpu().numpy()
     gt_t = tlabelv.data.cpu().numpy()
-    gt_s  = gta5_set.decode_segmap(gt_s)
+    gt_s  = synthia_set.decode_segmap(gt_s)
     gt_t  = city_set.decode_segmap(gt_t)
     
     total_loss = \
               1.0 * loss_sim_sg \
-            + 1.0 * loss_feat_similarity \
+            + 2.0 * loss_feat_similarity \
             + 0.5 * loss_rec_self \
             + 0.01* loss_image_translation \
             + 0.05 * loss_rec_tran 
