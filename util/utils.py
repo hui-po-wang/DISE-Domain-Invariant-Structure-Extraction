@@ -56,5 +56,5 @@ def save_models(model_dict, prefix='./'):
 
 def load_models(model_dict, prefix='./'):
     for key, value in model_dict.items():
-        value.load_state_dict(torch.load(prefix+key+'.pth'))
+        value.load_state_dict(torch.load(os.path.join(prefix, key+'.pth')))
 
