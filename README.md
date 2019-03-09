@@ -35,6 +35,11 @@ The structure of `/data` may look like this:
 ```
 python train_dise_gta2city.py --gta5_data_path /data/GTA5 --city_data_path /data/Cityscapes
 ```
+### Example Testing Script:
+Note that, to test performance on the testing set, we provide scripts to generate 1024x2048 outputs which are compatible with [the testing server](https://www.cityscapes-dataset.com/benchmarks/#instance-level-results).
+```
+python evaluate.py ./weights --city_data_path /data/Cityscapes
+```
 ### More options
 ```
 python train_dise_gta2city.py  -h

@@ -25,6 +25,7 @@ from util.utils import poly_lr_scheduler, adjust_learning_rate, save_models, loa
 
 from util.loader.CityTestLoader import CityTestLoader
 
+num_classes = 19
 CITY_DATA_PATH = '/workspace/lustre/data/Cityscapes'
 DATA_LIST_PATH_TEST_IMG = './util/loader/cityscapes_list/test.txt'
 WEIGHT_DIR = './weight'
@@ -55,7 +56,7 @@ model_dict['enc_shared'] = enc_shared
 load_models(model_dict, args.weight_dir)
 
 enc_shared.eval()
-cty_running_metrics = runningScore(pspnet_specs['n_classes'])     
+cty_running_metrics = runningScore(num_classes)     
 for i_test, (images_test, name) in tqdm(enumerate(test_loader)):
     images_test = Variable(images_test.cuda(), volatile=True)
 
@@ -69,6 +70,6 @@ for i_test, (images_test, name) in tqdm(enumerate(test_loader)):
     pred = Image.fromarray(pred)
     
     name = name[0][0].split('/')[-1]
-    if os.path.exists(args.output_dir):
+    if not os.path.exists(args.output_dir):
     	os.makedirs(args.output_dir)
     pred.save(os.path.join(args.output_dir, name))
