@@ -30,13 +30,14 @@ DATA_LIST_PATH_TEST_IMG = './util/loader/cityscapes_list/test.txt'
 WEIGHT_DIR = './weight'
 OUTPUT_DIR = './result'
 DEFAULT_GPU = 0
+IMG_MEAN = np.array((104.00698793, 116.66876762, 122.67891434), dtype=np.float32)
 
 parser = argparse.ArgumentParser(description='Domain Invariant Structure Extraction (DISE) \
 	for unsupervised domain adaptation for semantic segmentation')
+parser.add_argument('weight_dir', type=str, default=WEIGHT_DIR)
 parser.add_argument('--city_data_path', type=str, default=CITY_DATA_PATH, help='the path to cityscapes.')
 parser.add_argument('--data_list_path_test_img', type=str, default=DATA_LIST_PATH_TEST_IMG)
 parser.add_argument('--gpu', type=str, default=DEFAULT_GPU)
-parser.add_argument('--weight_dir', type=str, default=WEIGHT_DIR)
 parser.add_argument('--output_dir', type=str, default=OUTPUT_DIR)
 
 args = parser.parse_args()
