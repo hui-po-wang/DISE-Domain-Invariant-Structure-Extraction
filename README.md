@@ -11,6 +11,10 @@ Ciation information here
 ## Quantitative Results
 ![performance.png](examples/performance.png)
 
+## Prerequisite
+Pytorch 0.3.1
+Nvidia GPU with at least 16 GB memory 
+
 ## Installation
 ```
 git clone https://github.com/a514514772/DISE-Domain-Invariant-Structure-Extraction.git
