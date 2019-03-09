@@ -532,4 +532,4 @@ for i_iter in range(num_steps):
         if cty_score['Mean IoU : \t'] > best_iou:
             best_iter = i_iter
             best_iou = cty_score['Mean IoU : \t']
-            #save_models(model_dict, './weight/')
+            save_models(model_dict, './weight/')
