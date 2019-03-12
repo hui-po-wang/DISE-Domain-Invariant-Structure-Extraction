@@ -1,4 +1,0 @@
-aachen/aachen_000011_000019_leftImg8bit.png
-monchengladbach/monchengladbach_000000_000076_leftImg8bit.png
-monchengladbach/monchengladbach_000000_000076_leftImg8bit.png
-aachen/aachen_000011_000019_leftImg8bit.png

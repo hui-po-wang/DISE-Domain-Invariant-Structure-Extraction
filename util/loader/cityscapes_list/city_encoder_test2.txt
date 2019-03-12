@@ -1,3 +1,0 @@
-jena/jena_000050_000019_leftImg8bit.png
-ulm/ulm_000015_000019_leftImg8bit.png
-weimar/weimar_000011_000019_leftImg8bit.png

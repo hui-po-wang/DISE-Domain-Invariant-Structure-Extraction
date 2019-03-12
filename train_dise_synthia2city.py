@@ -44,7 +44,7 @@ CUDA_DIVICE_ID = '0, 1'
 
 parser = argparse.ArgumentParser(description='Domain Invariant Structure Extraction (DISE) \
 	for unsupervised domain adaptation for semantic segmentation')
-parser.add_argument('--dump_logs', type=bool, default=True)
+parser.add_argument('--dump_logs', type=bool, default=False)
 parser.add_argument('--log_dir', type=str, default=LOG_DIR, help='the path to where you save plots and logs.')
 parser.add_argument('--gen_img_dir', type=str, default=GEN_IMG_DIR, help='the path to where you save translated images and segmentation maps.')
 parser.add_argument('--synthia_data_path', type=str, default=SYNTHIA_DATA_PATH, help='the path to SYNTHIA dataset.')
@@ -59,7 +59,8 @@ parser.add_argument('--cuda_device_id', nargs='+', type=str, default=CUDA_DIVICE
 
 args = parser.parse_args()
 
-os.environ['CUDA_VISIBLE_DEVICES'] = args.cuda_device_id
+print ('cuda_device_id:', ','.join(args.cuda_device_id))
+os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(args.cuda_device_id)
 
 if not os.path.exists(args.log_dir):
     os.makedirs(args.log_dir)
@@ -125,6 +126,7 @@ cty_running_metrics = runningScore(num_classes)
 model_dict = {}
 
 # Setup Model
+print ('building models ...')
 enc_shared = SharedEncoder().cuda()
 dclf1      = DomainClassifier().cuda()
 dclf2      = DomainClassifier().cuda()
@@ -268,8 +270,8 @@ for i_iter in range(num_steps):
         p.requires_grad = True
     # train Domain classifier
     # ===== dclf1 =====
-    prob_dclf1_real1 = dclf1(F.softmax(upsample_256(s_pred1.detach())))
-    prob_dclf1_fake1 = dclf1(F.softmax(upsample_256(t_pred1.detach())))
+    prob_dclf1_real1 = dclf1(F.softmax(upsample_256(s_pred1.detach()), dim=1))
+    prob_dclf1_fake1 = dclf1(F.softmax(upsample_256(t_pred1.detach()), dim=1))
     loss_d_dclf1 = bce_loss(prob_dclf1_real1, Variable(torch.FloatTensor(prob_dclf1_real1.data.size()).fill_(true_label)).cuda()).cuda() \
                  + bce_loss(prob_dclf1_fake1, Variable(torch.FloatTensor(prob_dclf1_fake1.data.size()).fill_(fake_label)).cuda()).cuda()
     if i_iter%1 == 0:
@@ -278,8 +280,8 @@ for i_iter in range(num_steps):
         dclf1_opt.step()
 
     # ===== dclf2 =====
-    prob_dclf2_real1 = dclf2(F.softmax(upsample_256(s_pred2.detach())))
-    prob_dclf2_fake1 = dclf2(F.softmax(upsample_256(t_pred2.detach())))
+    prob_dclf2_real1 = dclf2(F.softmax(upsample_256(s_pred2.detach()), dim=1))
+    prob_dclf2_fake1 = dclf2(F.softmax(upsample_256(t_pred2.detach()), dim=1))
     loss_d_dclf2 = bce_loss(prob_dclf2_real1, Variable(torch.FloatTensor(prob_dclf2_real1.data.size()).fill_(true_label)).cuda()).cuda() \
                  + bce_loss(prob_dclf2_fake1, Variable(torch.FloatTensor(prob_dclf2_fake1.data.size()).fill_(fake_label)).cuda()).cuda()
     if i_iter%1 == 0:
@@ -327,10 +329,10 @@ for i_iter in range(num_steps):
     loss_rec_tran = loss_rec_s2t + loss_rec_t2s
 
     # ==== domain agnostic loss ====
-    prob_dclf1_fake2 = dclf1(F.softmax(upsample_256(t_pred1)))
+    prob_dclf1_fake2 = dclf1(F.softmax(upsample_256(t_pred1), dim=1))
     loss_feat1_similarity = bce_loss(prob_dclf1_fake2, Variable(torch.FloatTensor(prob_dclf1_fake2.data.size()).fill_(true_label)).cuda())
 
-    prob_dclf2_fake2 = dclf2(F.softmax(upsample_256(t_pred2)))
+    prob_dclf2_fake2 = dclf2(F.softmax(upsample_256(t_pred2), dim=1))
     loss_feat2_similarity = bce_loss(prob_dclf2_fake2, Variable(torch.FloatTensor(prob_dclf2_fake2.data.size()).fill_(true_label)).cuda())
 
     loss_feat_similarity = lambda_adv_target1* loss_feat1_similarity + lambda_adv_target2* loss_feat2_similarity
@@ -368,8 +370,8 @@ for i_iter in range(num_steps):
     # visualize segmentation map
     t_pred2 = upsample_256(t_pred2)
 
-    pred_s = F.softmax(s_pred2).data.max(1)[1].cpu().numpy()
-    pred_t = F.softmax(t_pred2).data.max(1)[1].cpu().numpy()
+    pred_s = F.softmax(s_pred2, dim=1).data.max(1)[1].cpu().numpy()
+    pred_t = F.softmax(t_pred2, dim=1).data.max(1)[1].cpu().numpy()
 
     map_s  = synthia_set.decode_segmap(pred_s)
     map_t  = city_set.decode_segmap(pred_t)
@@ -505,7 +507,7 @@ for i_iter in range(num_steps):
 
     if i_iter % num_calmIoU == 0:
         enc_shared.eval()
-        
+        print ('evaluating models ...')
         for i_val, (images_val, labels_val) in tqdm(enumerate(val_loader)):
             images_val = Variable(images_val.cuda(), volatile=True)
             labels_val = Variable(labels_val, volatile=True)

@@ -1,5 +1,0 @@
-aachen/aachen_000011_000019_gtFine_labelIds.png
-monchengladbach/monchengladbach_000000_000076_gtFine_labelIds.png
-monchengladbach/monchengladbach_000000_000076_gtFine_labelIds.png
-aachen/aachen_000011_000019_gtFine_labelIds.png
-~
