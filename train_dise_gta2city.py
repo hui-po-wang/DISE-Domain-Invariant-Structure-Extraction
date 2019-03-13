@@ -402,7 +402,7 @@ for i_iter in range(num_steps):
     enc_t_opt.step()
     dec_s_opt.step()
         
-    if i_iter % 25 == 0 and args.dump_logs: 
+    if i_iter % 25 == 0: 
         i_iter_tmp.append(i_iter)
         print ('Best Iter : '+str(best_iter))
         print ('Best mIoU : '+str(best_iou))
