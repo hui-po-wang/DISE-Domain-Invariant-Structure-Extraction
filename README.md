@@ -35,6 +35,9 @@ The structure of `/data` may look like this:
           └── labels
   ```
 ## Usage
+### Pretrained Weights
+[Google drive](https://drive.google.com/drive/folders/1NSPhGnTqBp6oeBd6awNs7VVTGuL1p4wP?usp=sharing)
+
 ### Example Training Script: GTA5 to Cityscapes
 ```
 python train_dise_gta2city.py --gta5_data_path /data/GTA5 --city_data_path /data/Cityscapes
