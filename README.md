@@ -12,8 +12,8 @@ Ciation information here
 ![performance.png](examples/performance.png)
 
 ## Prerequisite
-Pytorch 0.3.1
-Nvidia GPU with at least 16 GB memory 
+- Pytorch 0.3.1  
+- Nvidia GPU with at least 16 GB memory 
 
 ## Installation
 ```
