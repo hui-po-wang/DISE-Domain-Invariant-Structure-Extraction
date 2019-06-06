@@ -1,7 +1,8 @@
 # DISE-Domain-Invariant-Structure-Extraction
 Pytorch Implementation of the paper All about Structure: Adapting Structural Information across Domains for Boosting Semantic Segmentation, CVPR 2019.
 
-Introduction video: [youtube](https://youtu.be/YnD_zQNbfK4)
+|[Introduction video](https://youtu.be/YnD_zQNbfK4) | [Paper (ArXiv)](https://arxiv.org/abs/1903.12212)| [Project Page](https://a514514772.github.io/DISE-Domain-Invariant-Structure-Extraction/) |
+|---|---|---|
 ## Paper
 All about Structure: Adapting Structural Information across Domains for Boosting Semantic Segmentation  
 Wei-Lun Chang*, Hui-Po Wang*, Wen-Hsiao Peng, Wei-Chen Chiu (\*contribute equally)  
