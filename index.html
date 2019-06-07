@@ -5,6 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>All about Structure Adapting Structural Information across Domains for Boosting Semantic Segmentation (CVPR 2019)</title>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <script type="text/javascript">
+    LatexIT.add('p',true);
+    </script>
 
     <!-- CSS includes -->
     <link href="All about Structure Adapting Structural Information across Domains for Boosting Semantic Segmentation/bootstrap.css" rel="stylesheet">
@@ -94,8 +98,9 @@
     <img src="All about Structure Adapting Structural Information across Domains for Boosting Semantic Segmentation/model.jpg" width="80%">
     </p>
     <br>
-    To disentangle images into domain-invariant structure and domain-specific texture representations, we first decompose input images into two kind of signals encoded by the private encoder and the shared encoder respectively. The model is also required to perfectly reconstruct input images given those two types of signals, which ensures the information is not lost during the decomposition. However, it is not guaranteed that the domain-invariant part purely contains structural information. To tackle this issue, we further regularize the decomposition by measuring translation loss as the sum of distortions in high-level features and low-level Gram matrices extracted with VGG-Net.
-    </div>
+    <p>
+    An overview of the proposed domain-invariant structure extraction (DISE) framework for semantic segmentation. The DISE framework is composed of a common encoder $E_c$ shared across domains, two domain-specific private encoders, $E_p^s, E_p^t$, a pixel-wise classifier $T$, and a shared decoder $D$. It encodes an image, source-domain or target-domain, into a domain-specific texture component $z_p$ and a domain-invariant structure component $z_c$, as shown in part (a). With this disentanglement, it can translate an image  $x^s$ (respectively, $x^t$) in one domain to another image $\hat{x}^{s2t}$ (respectively, $\hat{x}^{t2s}$) in the other domain by combining the structure content of $x^s$ (respectively, $x^t$) with the texture appearance of $x^t$ (respectively, $x^s$), as shown in parts (b) and (c). This further enables the transfer of ground-truth labels from the source domain to the target domain, as illustrated in part (d).
+    </p></div>
 
     <div class="container" id="exp_results">
     <h2>Example Results (from GTA5 to Cityscapes)</h2>
